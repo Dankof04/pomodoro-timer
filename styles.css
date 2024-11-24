@@ -1,0 +1,40 @@
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  margin-top: 50px;
+}
+
+.settings {
+  margin-bottom: 20px;
+}
+
+.settings label {
+  display: block;
+  margin: 10px 0;
+}
+
+.settings input {
+  width: 50px;
+  text-align: center;
+}
+
+.timer {
+  margin-top: 30px;
+}
+
+#time {
+  font-size: 48px;
+  font-weight: bold;
+  color: #333;
+}
+
+#mode {
+  font-size: 24px;
+  color: #555;
+}
