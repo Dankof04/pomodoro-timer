@@ -1,6 +1,7 @@
 const dropzone = document.getElementById('dropzone');
 const startButton = document.getElementById('start');
 const timerDisplay = document.getElementById('timer');
+const bell = document.getElementById('bell'); // Seleccionar el audio
 let blocks = [];
 let currentBlockIndex = 0;
 let timeLeft = 0;
@@ -60,6 +61,7 @@ function startNextBlock() {
 
     if (timeLeft <= 0) {
       clearInterval(timerInterval);
+      bell.play(); // Reproduce el sonido de la campana
       currentBlockIndex++;
       startNextBlock();
     }
@@ -75,4 +77,5 @@ function updateTimerDisplay() {
     .toString()
     .padStart(2, '0')}`;
 }
+
 
