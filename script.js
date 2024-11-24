@@ -1,65 +1,78 @@
-let workTime = 25;
-let shortBreak = 5;
-let longBreak = 15;
-let cycles = 4;
-
-const modeDisplay = document.getElementById('mode');
-const timeDisplay = document.getElementById('time');
+const dropzone = document.getElementById('dropzone');
 const startButton = document.getElementById('start');
-
-let currentMode = 'Work';
-let currentCycle = 0;
-let timeLeft;
+const timerDisplay = document.getElementById('timer');
+let blocks = [];
+let currentBlockIndex = 0;
+let timeLeft = 0;
 let timerInterval;
 
-startButton.addEventListener('click', () => {
-  workTime = parseInt(document.getElementById('workTime').value) * 60;
-  shortBreak = parseInt(document.getElementById('shortBreak').value) * 60;
-  longBreak = parseInt(document.getElementById('longBreak').value) * 60;
-  cycles = parseInt(document.getElementById('cycles').value);
-
-  currentMode = 'Work';
-  currentCycle = 0;
-  timeLeft = workTime;
-
-  updateDisplay();
-  startTimer();
+// Hacer los bloques arrastrables
+document.querySelectorAll('.block').forEach(block => {
+  block.addEventListener('dragstart', e => {
+    e.dataTransfer.setData('text/plain', block.outerHTML);
+  });
 });
 
-function startTimer() {
-  clearInterval(timerInterval);
+// Permitir soltar en la zona
+dropzone.addEventListener('dragover', e => {
+  e.preventDefault();
+});
+
+dropzone.addEventListener('drop', e => {
+  e.preventDefault();
+  const blockHTML = e.dataTransfer.getData('text/plain');
+  dropzone.innerHTML += blockHTML;
+  updateBlocks();
+});
+
+// Actualizar la lista de bloques
+function updateBlocks() {
+  blocks = Array.from(dropzone.querySelectorAll('.block')).map(block => ({
+    type: block.dataset.type,
+    time: parseInt(block.querySelector('.time-input').value) * 60
+  }));
+}
+
+// Iniciar temporizador
+startButton.addEventListener('click', () => {
+  if (blocks.length === 0) {
+    alert('Por favor, añade bloques al plan.');
+    return;
+  }
+  currentBlockIndex = 0;
+  startNextBlock();
+});
+
+// Función para ejecutar cada bloque
+function startNextBlock() {
+  if (currentBlockIndex >= blocks.length) {
+    clearInterval(timerInterval);
+    alert('¡Plan completado!');
+    return;
+  }
+
+  const currentBlock = blocks[currentBlockIndex];
+  timeLeft = currentBlock.time;
+
   timerInterval = setInterval(() => {
     timeLeft--;
-    updateDisplay();
+    updateTimerDisplay();
 
     if (timeLeft <= 0) {
-      switchMode();
+      clearInterval(timerInterval);
+      currentBlockIndex++;
+      startNextBlock();
     }
   }, 1000);
+
+  updateTimerDisplay();
 }
 
-function switchMode() {
-  if (currentMode === 'Work') {
-    currentCycle++;
-    if (currentCycle % cycles === 0) {
-      currentMode = 'Long Break';
-      timeLeft = longBreak;
-    } else {
-      currentMode = 'Short Break';
-      timeLeft = shortBreak;
-    }
-  } else {
-    currentMode = 'Work';
-    timeLeft = workTime;
-  }
-  updateDisplay();
-}
-
-function updateDisplay() {
-  modeDisplay.textContent = currentMode;
+function updateTimerDisplay() {
   const minutes = Math.floor(timeLeft / 60);
   const seconds = timeLeft % 60;
-  timeDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds
+  timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds
     .toString()
     .padStart(2, '0')}`;
 }
+

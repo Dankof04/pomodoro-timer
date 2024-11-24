@@ -3,22 +3,37 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pomodoro Timer</title>
+  <title>Estudio Personalizado</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div class="container">
-    <h1>Pomodoro Timer</h1>
-    <div class="settings">
-      <label>Work (min): <input type="number" id="workTime" value="25"></label>
-      <label>Short Break (min): <input type="number" id="shortBreak" value="5"></label>
-      <label>Long Break (min): <input type="number" id="longBreak" value="15"></label>
-      <label>Cycles: <input type="number" id="cycles" value="4"></label>
-      <button id="start">Start</button>
+    <h1>Planificador de Estudio</h1>
+
+    <!-- Menú de bloques -->
+    <div class="menu">
+      <h2>Menú de bloques</h2>
+      <div class="block" draggable="true" data-type="Trabajo">
+        Trabajo: <input type="number" value="15" class="time-input"> min
+      </div>
+      <div class="block" draggable="true" data-type="Descanso">
+        Descanso: <input type="number" value="5" class="time-input"> min
+      </div>
     </div>
+
+    <!-- Área de planificación -->
+    <div class="planner">
+      <h2>Tu plan</h2>
+      <div id="dropzone" class="dropzone">
+        <p>Arrastra bloques aquí</p>
+      </div>
+    </div>
+
+    <!-- Temporizador -->
     <div class="timer">
-      <h2 id="mode">Work</h2>
-      <p id="time">25:00</p>
+      <h2>Temporizador</h2>
+      <p id="timer">00:00</p>
+      <button id="start">Iniciar</button>
     </div>
   </div>
   <script src="script.js"></script>
