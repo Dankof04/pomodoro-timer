@@ -22,15 +22,28 @@ dropzone.addEventListener('dragover', e => {
 dropzone.addEventListener('drop', e => {
   e.preventDefault();
   const blockHTML = e.dataTransfer.getData('text/plain');
-  dropzone.innerHTML += blockHTML;
-  updateBlocks();
+  const tempDiv = document.createElement('div'); // Contenedor temporal
+  tempDiv.innerHTML = blockHTML;
+
+  // Copiar el valor del tiempo del bloque arrastrado
+  const draggedBlock = tempDiv.firstChild;
+  const timeInputValue = draggedBlock.querySelector('.time-input').value;
+
+  // Añadir el bloque al plan
+  dropzone.appendChild(draggedBlock);
+
+  // Establecer el valor del input del bloque en el plan
+  const addedBlock = dropzone.lastChild;
+  addedBlock.querySelector('.time-input').value = timeInputValue;
+
+  updateBlocks(); // Actualizar lista de bloques
 });
 
 // Actualizar la lista de bloques
 function updateBlocks() {
   blocks = Array.from(dropzone.querySelectorAll('.block')).map(block => ({
     type: block.dataset.type,
-    time: parseInt(block.querySelector('.time-input').value) * 60
+    time: parseInt(block.querySelector('.time-input').value) * 60 // Lee el valor dinámicamente
   }));
 }
 
@@ -77,5 +90,3 @@ function updateTimerDisplay() {
     .toString()
     .padStart(2, '0')}`;
 }
-
-
